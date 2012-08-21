@@ -171,7 +171,7 @@ _EOF_
 
     IPTABLESDIR=/etc/openpanel/iptables.d
     echo '$IPTABLES -t nat -F no-nat-ipsec' > no-nat-ipsec.inc
-    echo '$IPTABLES -t nat -D no-nat-ipsec' >> no-nat-ipsec.inc
+    echo '$IPTABLES -t nat -X no-nat-ipsec' >> no-nat-ipsec.inc
     echo '$IPTABLES -t nat -N no-nat-ipsec' >> no-nat-ipsec.inc
     echo '$IPTABLES -t nat -I POSTROUTING -j no-nat-ipsec' >> no-nat-ipsec.inc
     echo '$IPTABLES -t nat -A no-nat-ipsec -p esp -j ACCEPT' >> no-nat-ipsec.inc
