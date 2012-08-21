@@ -1,0 +1,12 @@
+Source: openpanel-mod-openswan
+Section: misc
+Priority: optional
+Maintainer: OpenPanel packager <packages@openpanel.com>
+Build-Depends: debhelper (>= 5), openpanel-dev, imagemagick
+Standards-Version: 3.7.2
+
+Package: openpanel-mod-openswan
+Architecture: all
+Depends: openswan
+Description: Configure IPSec from OpenPanel
+ Create IPSec tunnels

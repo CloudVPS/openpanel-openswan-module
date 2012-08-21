@@ -1,0 +1,18 @@
+#!/bin/bash
+
+CONN=$1
+ACTION=$2
+
+[ -z "${CONN}" ] && exit 1
+[ -z "${ACTION}" ] && exit 1
+
+if [ "${ACTION}" = "up" ]; then
+    /usr/sbin/ipsec auto --add ${CONN}
+    /usr/sbin/ipsec auto --route ${CONN}
+    /usr/sbin/ipsec auto --ready
+elif [ "${ACTION}" = "down" ]; then
+    /usr/sbin/ipsec auto --unroute ${CONN}
+    /usr/sbin/ipsec auto --delete ${CONN}
+    /usr/sbin/ipsec auto --ready
+fi
+

@@ -1,0 +1,151 @@
+# This file is part of OpenPanel - The Open Source Control Panel
+# OpenPanel is free software: you can redistribute it and/or modify it 
+# under the terms of the GNU General Public License as published by the Free 
+# Software Foundation, using version 3 of the License.
+#
+# Please note that use of the OpenPanel trademark may be subject to additional 
+# restrictions. For more information, please visit the Legal Information 
+# section of the OpenPanel website on http://www.openpanel.com/
+============================================================================
+# OpenPanel Openswan.module for IPSec-connections configuration
+# ============================================================================
+module Openswan             < uuid f897a0c4-c1e9-4650-9d24-f13f099ee62a
+                            < version 1.0
+                            < languages en_EN
+                            < apitype commandline
+                            < getconfig true
+                            < license GPLv3
+                            < author OpenPanel
+                            < url http://www.openpanel.com/
+
+
+# ============================================================================
+# CLASSES
+# ============================================================================
+class Openswan              < uuid d085206d-6773-49ac-91d0-e3e57317c4d5
+                            < version 1
+                            < indexing auto
+                            < allchildren true
+                            < uniquein class
+                            < shortname openswan
+                            < singleton openswan
+                            < title IPSec
+                            < description IPSec connections
+                            < sortindex 85
+                            < icon openswan.png
+                            < capabilities update admin
+                            < required id left leftnexthop leftsubnet
+
+    string left             : Our IPSec IP
+                            < example 8.8.8.8
+                            < tooltip This IP will be the configured endpoint on this side of the tunnel
+                            < regexp [:ipv4:]
+
+    string leftnexthop      : Our Next-hop
+                            < example 8.8.8.1
+                            < tooltip This IP is our gateway
+                            < regexp [:ipv4:]
+
+    string leftsubnet       : Our Subnet internally
+                            < example 8.8.8.0/24
+                            < tooltip This is our network that should be reachable for the other endpoint
+                            < regexp [:ipv4cidr:]
+
+# ----------------------------------------------------------------------------
+class Openswan:Connection   < uuid 079752eb-a612-40d4-96f6-63df88803feb
+                            < version 1
+                            < requires Openswan
+                            < indexing manual
+                            < uniquein parent
+                            < allchildren true
+                            < shortname connections
+                            < sortindex 90
+                            < title Connections
+                            < description Create connections
+                            < capabilities update create delete admin
+                            < required id rightnexthop rightsubnet right_psk description ike_alg phase2alg
+                            < listview id
+
+    string id               : Clients IPSec IP
+                            < example 8.8.8.8
+                            < tooltip This IP will be the configured endpoint on the other side of the tunnel
+                            < regexp [:ipv4:]
+
+    string rightnexthop     : Clients Next-hop
+                            < example 8.8.8.1
+                            < tooltip This IP is the clients gateway
+                            < regexp [:ipv4:]
+
+    string rightsubnet      : Clients Subnet internally
+                            < example 8.8.8.0/24
+                            < tooltip This is the clients network that should be reachable for us
+                            < regexp [:ipv4cidr:]
+
+    string leftsubnet       : Our Subnet internally
+                            < example 8.8.8.0/24
+                            < tooltip Will override the system-setting
+                            < regexp [:ipv4cidr:]
+
+    bool conn_enabled       : Always on
+                            < default true
+
+    string right_psk        : Pre-shared-key
+                            < tooltip The preshared key to use for this connection
+
+    enum ike_alg            : IKE Algorithm
+                            < default aes128-sha1
+
+    enum phase2alg          : Ph2 Algorithm
+                            < default aes256-sha1
+    
+    string description      : Description
+                            < tooltip An illustrative description for this connection
+                            < regexp [:names:]
+
+enum ike_alg
+    3des-sha1               : 3DES-SHA1
+    3des-md5                : 3DES-MD5
+    aes128-sha1             : AES128-SHA1
+    aes128-md5              : AES128-MD5
+    none                    : None
+
+enum phase2alg
+    3des-sha1               : 3DES-SHA1
+    3des-md5                : 3DES-MD5
+    aes256-sha1             : AES256-SHA1
+    aes256-md5              : AES256-MD5
+    none                    : None
+
+
+authd fileops
+    match *.op.conf         : /etc/ipsec.d
+                            < user root
+                            < group openpanel-core
+                            < perms 0640
+
+    match *.op.secret       : /etc/ipsec.d
+                            < user root
+                            < group openpanel-core
+                            < perms 0640
+
+    match ipsec.conf        : /etc
+                            < user root
+                            < group openpanel-core
+                            < perms 0640
+
+    match ipsec.secrets     : /etc
+                            < user root
+                            < group openpanel-core
+                            < perms 0640
+
+    match *.inc             : /etc/openpanel/iptables.d
+                            < user root
+                            < group openpanel-core
+                            < perms 0750
+
+authd services
+    service ipsec
+
+authd scripts
+    script op-ipsec
+    script iptables-update
