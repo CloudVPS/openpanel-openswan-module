@@ -118,12 +118,12 @@ enum phase2alg
 
 
 authd fileops
-    match *.op.conf         : /etc/ipsec.d
+    match *.op.conf         : /etc/op-ipsec.d
                             < user root
                             < group openpanel-core
                             < perms 0640
 
-    match *.op.secret       : /etc/ipsec.d
+    match *.op.secret       : /etc/op-ipsec.d
                             < user root
                             < group openpanel-core
                             < perms 0640

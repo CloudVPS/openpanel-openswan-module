@@ -32,8 +32,8 @@ Openswan:Connection.delete() {
 
     authd runscript op-ipsec ${conn_name} down
 
-    authd deletefile /etc/ipsec.d/${conn_name}.op.conf
-    authd deletefile /etc/ipsec.d/${conn_name}.op.secret
+    authd deletefile /etc/op-ipsec.d/${conn_name}.op.conf
+    authd deletefile /etc/op-ipsec.d/${conn_name}.op.secret
     authd deletefile ${IPTABLESDIR}/open-ipsec.${conn_name}.inc
 
     authd runscript iptables-update
@@ -119,8 +119,8 @@ _EOF_
     echo  '$IPTABLES -A openpanel -p udp -s '${right}' --dport 500 -j openpanel-allow' >> open-ipsec.${right}.inc
     echo  '$IPTABLES -A openpanel -p udp -s '${right}' --dport 4500 -j openpanel-allow' >> open-ipsec.${right}.inc
 
-    authd installfile ${OUTFILE}.op.conf /etc/ipsec.d/
-    authd installfile ${OUTFILE}.op.secret /etc/ipsec.d/
+    authd installfile ${OUTFILE}.op.conf /etc/op-ipsec.d/
+    authd installfile ${OUTFILE}.op.secret /etc/op-ipsec.d/
 
     authd installfile open-ipsec.${right}.inc ${IPTABLESDIR}
     authd runscript iptables-update
@@ -153,7 +153,7 @@ config setup
     oe=off
     protostack=auto
 
-include /etc/ipsec.d/*.op.conf
+include /etc/op-ipsec.d/*.op.conf
 
 _EOF_
 
@@ -163,7 +163,7 @@ _EOF_
 # overwritten
 ###
 
-include /etc/ipsec.d/*.op.secret
+include /etc/op-ipsec.d/*.op.secret
 
 _EOF_
     authd installfile ${ipsecconf} /etc/
