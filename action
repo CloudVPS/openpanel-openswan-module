@@ -120,6 +120,8 @@ _EOF_
     echo  '$IPTABLES -A openpanel -p udp -s '${right}' --dport 4500 -j openpanel-allow' >> open-ipsec.${right}.inc
     echo  '$IPTABLES -A openpanel-fwd -s '${leftsubnet}' -d '${rightsubnet}' -j openpanel-allow' >> open-ipsec.${right}.inc
     echo  '$IPTABLES -A openpanel-fwd -s '${rightsubnet}' -d '${leftsubnet}' -j openpanel-allow' >> open-ipsec.${right}.inc
+    echo  '$IPTABLES -t nat -A no-nat-ipsec -s '${leftsubnet}' -d '${rightsubnet}' -j ACCEPT' >> open-ipsec.${right}.inc
+    echo  '$IPTABLES -t nat -A no-nat-ipsec -s '${rightsubnet}' -d '${leftsubnet}' -j ACCEPT' >> open-ipsec.${right}.inc
 
     authd installfile ${OUTFILE}.op.conf /etc/op-ipsec.d/
     authd installfile ${OUTFILE}.op.secret /etc/op-ipsec.d/
